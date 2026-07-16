@@ -109,9 +109,17 @@ INSERT INTO users(username,email,password_hash,role) VALUES
 ('admin','admin@example.com','$2y$12$ImJWvX04hKMFEs/Zw/FzduayHJilXQnH41.4D3GWnL9e8S.Jln.7C','admin');
 INSERT INTO pricing_settings(setting_key,setting_value) VALUES
 ('vat_rate','0.20'),('target_margin','0.80'),('trade_discount','0.40'),('minimum_margin','0.20');
-INSERT INTO product_groups(name,preferred_margin) VALUES ('Stamps',0.80),('Cards',0.58),('Accessories',0.70);
-INSERT INTO products(group_id,sku,product_name,product_code,unit_cost,labour_cost,target_margin,retail_price,trade_discount,trade_price,minimum_margin,is_wholesale) VALUES
-(1,'LS-STO-26594','Wispens Stamp','LAV1065',0.67,0,0.80,4.00,0.40,2.70,0.25,1),
-(1,'LS-STO-26593','Tumbles Lantern Stamp','LAV1064',0.83,0,0.80,5.75,0.40,3.32,0.25,1),
-(1,'LS-STO-26592','Tumble Small Stamp','LAV1063',0.86,0,0.80,6.00,0.40,3.60,0.25,1),
-(2,'LS-STO-26627','Wishing You The Happiest of Birthdays Card','KG08NT',NULL,0,0.58,NULL,0.40,NULL,0.25,0);
+-- Fictional sample records for evaluating a fresh installation.
+INSERT INTO product_groups(name,preferred_margin) VALUES
+('Homeware',0.65),('Stationery',0.72),('Gift Sets',0.60);
+
+INSERT INTO products(group_id,sku,product_name,product_code,unit_cost,labour_cost,target_margin,preferred_price_override,msrp,competitor_price,retail_price,trade_discount,trade_price,minimum_margin,is_wholesale) VALUES
+(1,'DEMO-HW-1042','Speckled Ceramic Planter','DHW-4821',4.35,0.80,0.65,NULL,16.00,14.50,13.25,0.35,8.60,0.22,1),
+(1,'DEMO-HW-2187','Woven Cotton Coaster Set','DHW-7354',2.10,0.45,0.65,NULL,9.50,8.99,8.00,0.35,5.20,0.22,1),
+(1,'DEMO-HW-6631','Amber Glass Bud Vase','DHW-1968',3.75,0.60,0.65,12.95,15.00,13.49,12.50,0.35,8.10,0.22,1),
+(2,'DEMO-ST-3095','Recycled Paper Notebook','DST-6247',1.85,0.25,0.72,NULL,8.50,7.99,7.50,0.40,4.50,0.20,1),
+(2,'DEMO-ST-4578','Fine Line Pen Trio','DST-3086',1.20,0.15,0.72,NULL,6.50,5.95,5.25,0.40,3.15,0.20,1),
+(2,'DEMO-ST-8924','Undated Weekly Desk Pad','DST-9513',2.65,0.35,0.72,NULL,12.00,10.99,10.50,0.40,6.30,0.20,1),
+(3,'DEMO-GS-1256','Tea Break Gift Box','DGS-4072',7.80,1.50,0.60,NULL,26.00,24.95,23.50,0.30,16.45,0.25,1),
+(3,'DEMO-GS-5743','Mini Self-Care Collection','DGS-8639',9.25,1.75,0.60,29.95,34.00,31.50,29.00,0.30,20.30,0.25,1),
+(3,'DEMO-GS-7460','New Home Welcome Set','DGS-2154',11.40,2.10,0.60,NULL,42.00,NULL,37.50,0.30,26.25,0.25,0);

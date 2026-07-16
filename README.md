@@ -1,6 +1,6 @@
 # PricePlan
 
-A dependency-free PHP 8 and MariaDB/MySQL replacement for the supplied Lavinia Stamps pricing workbook.
+A dependency-free PHP 8 and MariaDB/MySQL product pricing planner.
 
 ## Deployment
 
@@ -14,15 +14,17 @@ No Composer, command-line, build, scheduled task, Node.js or environment file is
 
 ## Updating an existing install
 
-If you already imported an earlier version of the database, run `sql/upgrade_2026_07_08_product_group_margins.sql` and `sql/upgrade_2026_07_13_price_lists.sql` once through phpMyAdmin or your hosting control panel. New installs only need `sql/pricing_planner.sql`.
+If you already imported an earlier version of the database, run the applicable dated `sql/upgrade_*.sql` files once in date order through phpMyAdmin or your hosting control panel. New installs only need `sql/pricing_planner.sql`.
+
+Fresh installations include a small set of entirely fictional sample products so the pricing views can be evaluated immediately. These records can be edited, archived or replaced through CSV import.
 
 Admins can install future versions from **Updates** in the app. The server needs outbound HTTPS access, write access to the application directory and PHP's Zip extension. `config/config.php` is always preserved.
 
 To publish an update, increment `VERSION` and the version in `update.json`, list any new SQL files in `update.json` in execution order, commit, then push a matching tag such as `v1.1.0`. The GitHub workflow creates the release and its `priceplan-update.zip` package automatically. Back up the application and database before installing a release that contains migrations.
 
-## Workbook mapping
+## CSV mapping
 
-The CSV importer recognizes the supplied workbook's headers. Export the `Pricing Planner` sheet as CSV, open Import, and upload it. Derived columns are deliberately ignored.
+The CSV importer recognizes common pricing spreadsheet headers. Export a worksheet as CSV, open Import, and upload it. Derived columns are deliberately ignored.
 
 Stored inputs are product group, SKU, product name/code, unit and labour costs, target margin, optional preferred override, MSRP, competitor price, retail price excluding VAT, trade discount/price, minimum margin, and wholesale status.
 

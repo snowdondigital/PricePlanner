@@ -1,4 +1,6 @@
 {
-  "version": "1.0.0",
-  "migrations": []
+  "version": "1.0.1",
+  "migrations": [
+    "sql/upgrade_2026_07_16_replace_demo_data.sql"
+  ]
 }
