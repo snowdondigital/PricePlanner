@@ -18,7 +18,7 @@ function page_header(string $title): void
     <a href="<?= e(url('dashboard.php')) ?>">Dashboard</a>
     <a href="<?= e(url('products.php')) ?>">Products</a>
     <a href="<?= e(url('pricelists.php')) ?>">Price lists</a>
-    <?php if (can('settings')): ?><a href="<?= e(url('settings.php')) ?>">Settings</a><a href="<?= e(url('users.php')) ?>">Users</a><?php endif ?>
+    <?php if (can('settings')): ?><a href="<?= e(url('settings.php')) ?>">Settings</a><a href="<?= e(url('users.php')) ?>">Users</a><a href="<?= e(url('updates.php')) ?>">Updates</a><?php endif ?>
     <a href="<?= e(url('audit.php')) ?>">Audit</a>
     <?php if (can('import')): ?><a href="<?= e(url('import.php')) ?>">Import</a><?php endif ?>
     <?php if (can('export')): ?><a href="<?= e(url('export.php')) ?>">Export</a><?php endif ?>
@@ -32,5 +32,5 @@ function page_header(string $title): void
 
 function page_footer(): void
 {
-    ?></main><footer>PricePlan &middot; &copy; <?= e(date('Y')) ?> <a href="https://snowdondigital.co.uk" target="_blank" rel="noopener">Snowdon Digital</a> &middot; PHP <?= e(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION) ?></footer></body></html><?php
+    ?></main><footer>PricePlan <?= e(app_version()) ?> &middot; &copy; <?= e(date('Y')) ?> <a href="https://snowdondigital.co.uk" target="_blank" rel="noopener">Snowdon Digital</a> &middot; PHP <?= e(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION) ?></footer></body></html><?php
 }

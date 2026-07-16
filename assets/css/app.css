@@ -193,6 +193,11 @@ tbody tr:hover { background: #f7faf8; }
 .product-picker .line-discount { width: 130px; }
 .custom-pricing-panel[hidden] { display: none; }
 footer { text-align: center; color: var(--muted); padding: 20px; }
+.update-status { display: grid; grid-template-columns: 1fr 1fr; margin: 16px 0; }
+.update-status div { border: 1px solid var(--line); padding: 12px; }
+.update-status dt { color: var(--muted); }
+.update-status dd { font-size: 1.2rem; font-weight: 700; margin: 3px 0 0; }
+.release-notes { background: var(--bg); border-radius: 6px; padding: 14px; margin: 14px 0; }
 
 @media (max-width: 900px) {
   .stats { grid-template-columns: 1fr 1fr; }

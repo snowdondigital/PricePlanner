@@ -16,6 +16,10 @@ No Composer, command-line, build, scheduled task, Node.js or environment file is
 
 If you already imported an earlier version of the database, run `sql/upgrade_2026_07_08_product_group_margins.sql` and `sql/upgrade_2026_07_13_price_lists.sql` once through phpMyAdmin or your hosting control panel. New installs only need `sql/pricing_planner.sql`.
 
+Admins can install future versions from **Updates** in the app. The server needs outbound HTTPS access, write access to the application directory and PHP's Zip extension. `config/config.php` is always preserved.
+
+To publish an update, increment `VERSION` and the version in `update.json`, list any new SQL files in `update.json` in execution order, commit, then push a matching tag such as `v1.1.0`. The GitHub workflow creates the release and its `priceplan-update.zip` package automatically. Back up the application and database before installing a release that contains migrations.
+
 ## Workbook mapping
 
 The CSV importer recognizes the supplied workbook's headers. Export the `Pricing Planner` sheet as CSV, open Import, and upload it. Derived columns are deliberately ignored.

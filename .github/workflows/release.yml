@@ -1,0 +1,24 @@
+name: Publish update
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate version
+        run: |
+          test "v$(tr -d '\r\n' < VERSION)" = "$GITHUB_REF_NAME"
+          test "$(jq -r .version update.json)" = "$(tr -d '\r\n' < VERSION)"
+      - name: Build update package
+        run: zip -r priceplan-update.zip app assets public sql .htaccess index.php README.md VERSION update.json -x '*.git*'
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" priceplan-update.zip --generate-notes --verify-tag

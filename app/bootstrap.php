@@ -7,4 +7,5 @@ require_once __DIR__ . '/pricing.php';
 require_once __DIR__ . '/audit.php';
 require_once __DIR__ . '/products.php';
 require_once __DIR__ . '/pricelists.php';
+require_once __DIR__ . '/updates.php';
 start_session();

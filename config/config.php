@@ -5,6 +5,12 @@ return [
     'site_name' => 'PricePlan',
     'timezone' => 'Europe/London',
     'currency' => 'GBP',
+    'updates' => [
+        'enabled' => true,
+        'repository' => 'snowdondigital/PricePlanner',
+        'asset' => 'priceplan-update.zip',
+        'timeout' => 20,
+    ],
     'db' => [
         'host' => 'localhost',
         'port' => 3306,

@@ -3,10 +3,10 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^(app|config|sql)(/|$) - [F,L,NC]
+RewriteRule ^(app|config|sql|storage)(/|$) - [F,L,NC]
 RewriteRule ^(assets/.*)$ $1 [L]
 RewriteRule ^$ public/index.php [L]
-RewriteRule ^(login|logout|dashboard|products|product|settings|users|audit|import|export)\.php$ public/$1.php [L,QSA]
+RewriteRule ^(login|logout|dashboard|products|product|settings|users|audit|import|export|updates)\.php$ public/$1.php [L,QSA]
 </IfModule>
 
 <FilesMatch "(^\.|\.sql$|\.xlsx$|README\.md$)">

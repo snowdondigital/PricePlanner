@@ -55,6 +55,7 @@ function can(string $action): bool
         'export' => ['admin', 'manager'],
         'settings' => ['admin'],
         'users' => ['admin'],
+        'updates' => ['admin'],
     ];
     return in_array($role, $rules[$action] ?? [], true);
 }
