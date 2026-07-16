@@ -127,6 +127,10 @@ tbody tr:hover { background: #f7faf8; }
 
 .toolbar { display: flex; align-items: center; gap: 10px; padding: 12px; }
 .toolbar input { width: min(420px, 100%); }
+.bulk-actions { display: flex; align-items: center; gap: 10px; padding: 12px; }
+.bulk-actions span { margin-right: auto; color: var(--muted); }
+.select-column { width: 42px; text-align: center; }
+.select-column input { width: 17px; height: 17px; }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .form-grid .card { margin: 0; }

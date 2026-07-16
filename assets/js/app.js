@@ -4,6 +4,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm(el.dataset.confirm)) event.preventDefault();
   }));
 
+  const bulkProductsForm = document.querySelector('#bulk-products-form');
+  if (bulkProductsForm) {
+    const selectAll = bulkProductsForm.querySelector('[data-select-all]');
+    const boxes = [...bulkProductsForm.querySelectorAll('input[name="product_ids[]"]')];
+    const count = bulkProductsForm.querySelector('[data-selection-count]');
+    const syncSelection = () => {
+      const selected = boxes.filter(box => box.checked).length;
+      if (count) count.textContent = selected;
+      if (selectAll) {
+        selectAll.checked = boxes.length > 0 && selected === boxes.length;
+        selectAll.indeterminate = selected > 0 && selected < boxes.length;
+      }
+    };
+    selectAll?.addEventListener('change', () => {
+      boxes.forEach(box => { box.checked = selectAll.checked; });
+      syncSelection();
+    });
+    boxes.forEach(box => box.addEventListener('change', syncSelection));
+    bulkProductsForm.querySelectorAll('[data-bulk-confirm]').forEach(button => button.addEventListener('click', event => {
+      const selected = boxes.filter(box => box.checked).length;
+      if (selected === 0 || !confirm(button.dataset.bulkConfirm.replace('the selected products', `${selected} selected product${selected === 1 ? '' : 's'}`))) event.preventDefault();
+    }));
+    syncSelection();
+  }
+
   const empty = '-';
   const moneyFormat = value => value == null || !Number.isFinite(value) ? empty : new Intl.NumberFormat('en-GB', {style:'currency', currency:'GBP'}).format(value);
   const percentFormat = value => value == null || !Number.isFinite(value) ? empty : `${(value * 100).toFixed(1)}%`;
