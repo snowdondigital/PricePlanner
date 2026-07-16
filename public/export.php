@@ -1,0 +1,6 @@
+<?php
+require_once dirname(__DIR__) . '/app/bootstrap.php';require_permission('export');
+header('Content-Type: text/csv; charset=UTF-8');header('Content-Disposition: attachment; filename="pricing-planner-'.date('Y-m-d').'.csv"');echo "\xEF\xBB\xBF";
+$out=fopen('php://output','wb');fputcsv($out,['Product Group','SKU','Product Name','Product Code','Unit Cost','Labour Cost','Total Cost','Target Margin %','Preferred Sell Price','MSRP','Avg Competitor Price','Retail Price excl. VAT','Retail Price incl. VAT','Target Trade Discount %','Suggested Trade Price','Actual Trade Price','Actual Trade Discount','Retail Margin','Trade Margin','Min Margin %','Min Price','Wholesale?']);
+$s=db()->query('SELECT p.*,g.name group_name FROM products p LEFT JOIN product_groups g ON g.id=p.group_id WHERE p.archived_at IS NULL ORDER BY p.product_name');
+while($p=$s->fetch()){$c=calculate_pricing($p);fputcsv($out,[$p['group_name'],$p['sku'],$p['product_name'],$p['product_code'],$p['unit_cost'],$p['labour_cost'],$c['total_cost'],$p['target_margin'],$c['preferred_sell_price'],$p['msrp'],$p['competitor_price'],$p['retail_price'],$c['retail_price_inc_vat'],$p['trade_discount'],$c['suggested_trade_price'],$p['trade_price'],$c['actual_trade_discount'],$c['retail_margin'],$c['trade_margin'],$p['minimum_margin'],$c['minimum_price'],$p['is_wholesale']]);}fclose($out);exit;
