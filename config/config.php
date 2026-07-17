@@ -14,9 +14,9 @@ return [
     'db' => [
         'host' => 'localhost',
         'port' => 3306,
-        'name' => 'pricing_planner',
-        'user' => 'pricing_user',
-        'password' => 'ihbihdbfihrfu*TGyhgf',
+        'name' => 'your_database_name',
+        'user' => 'your_database_user',
+        'password' => 'your_database_password',
         'charset' => 'utf8mb4',
     ],
     'defaults' => [
@@ -27,6 +27,6 @@ return [
     ],
     'session' => [
         'name' => 'pricing_planner_session',
-        'lifetime' => 28800,
+        'inactivity_lifetime' => 2592000,
     ],
 ];

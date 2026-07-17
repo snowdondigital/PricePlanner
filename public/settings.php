@@ -28,7 +28,26 @@ function valid_margin(?float $value): bool
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
-    $action = (string)($_POST['action'] ?? 'settings');
+    $action = isset($_POST['delete_group_id']) ? 'group_delete' : (string)($_POST['action'] ?? 'settings');
+
+    if ($action === 'group_delete') {
+        $groupId = (int)($_POST['delete_group_id'] ?? 0);
+        $stmt = db()->prepare('SELECT name FROM product_groups WHERE id = ?');
+        $stmt->execute([$groupId]);
+        $groupName = $stmt->fetchColumn();
+
+        if ($groupId <= 0 || $groupName === false) {
+            $errors[] = 'The product group no longer exists.';
+        } else {
+            try {
+                db()->prepare('DELETE FROM product_groups WHERE id = ?')->execute([$groupId]);
+                flash('success', 'Product group “' . $groupName . '” deleted. Its products now have no group.');
+                redirect('settings.php');
+            } catch (PDOException) {
+                $errors[] = 'The product group could not be deleted.';
+            }
+        }
+    }
 
     if ($action === 'settings') {
         $values = [];
@@ -115,7 +134,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$groups = db()->query('SELECT id, name, preferred_margin FROM product_groups ORDER BY name')->fetchAll();
+$groups = db()->query('SELECT g.id, g.name, g.preferred_margin, COUNT(p.id) product_count
+    FROM product_groups g
+    LEFT JOIN products p ON p.group_id = g.id
+    GROUP BY g.id, g.name, g.preferred_margin
+    ORDER BY g.name')->fetchAll();
 
 page_header('Settings');
 ?>
@@ -168,6 +191,8 @@ page_header('Settings');
                 <tr>
                     <th>Group name</th>
                     <th>Preferred margin %</th>
+                    <th>Products</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -178,6 +203,10 @@ page_header('Settings');
                         </td>
                         <td>
                             <input type="number" min="0" max="99.99" step=".01" name="preferred_margin[<?= (int)$group['id'] ?>]" value="<?= e($group['preferred_margin'] === null ? '' : (string)((float)$group['preferred_margin'] * 100)) ?>" placeholder="Use global default">
+                        </td>
+                        <td><?= number_format((int)$group['product_count']) ?></td>
+                        <td>
+                            <button class="button danger" name="delete_group_id" value="<?= (int)$group['id'] ?>" formnovalidate data-confirm="Delete the <?= e($group['name']) ?> group? <?= (int)$group['product_count'] ?> product<?= (int)$group['product_count'] === 1 ? '' : 's' ?> will be moved to No group.">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach ?>

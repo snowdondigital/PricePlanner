@@ -4,15 +4,27 @@ declare(strict_types=1);
 function start_session(): void
 {
     if (session_status() === PHP_SESSION_ACTIVE) return;
+    $lifetime = (int)config('session.inactivity_lifetime', 2592000);
+    $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    ini_set('session.gc_maxlifetime', (string)$lifetime);
     session_name((string)config('session.name'));
     session_set_cookie_params([
-        'lifetime' => (int)config('session.lifetime'),
+        'lifetime' => $lifetime,
         'path' => '/',
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'secure' => $secure,
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
     session_start();
+    if (!empty($_COOKIE[session_name()])) {
+        setcookie(session_name(), session_id(), [
+            'expires' => time() + $lifetime,
+            'path' => '/',
+            'secure' => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+    }
 }
 
 function user(): ?array

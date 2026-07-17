@@ -59,7 +59,7 @@ function save_product(array $p, ?int $id = null): int
         $sets = implode(', ', array_map(fn($f) => "$f = :$f", PRODUCT_FIELDS));
         $stmt = $pdo->prepare("UPDATE products SET $sets, updated_by = :updated_by WHERE id = :id");
         $stmt->execute($p + ['updated_by' => user()['id'], 'id' => $id]);
-        audit($id, 'update', $before, $p);
+        audit($id, 'update', $before, array_replace($before ?: [], $p));
         return $id;
     }
     $fields = PRODUCT_FIELDS;

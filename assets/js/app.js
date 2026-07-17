@@ -9,9 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectAll = bulkProductsForm.querySelector('[data-select-all]');
     const boxes = [...bulkProductsForm.querySelectorAll('input[name="product_ids[]"]')];
     const count = bulkProductsForm.querySelector('[data-selection-count]');
+    const bulkActions = bulkProductsForm.querySelector('[data-bulk-actions]');
+    const bulkEdit = bulkProductsForm.querySelector('[data-bulk-edit]');
     const syncSelection = () => {
       const selected = boxes.filter(box => box.checked).length;
       if (count) count.textContent = selected;
+      if (bulkActions) bulkActions.hidden = selected === 0;
+      if (bulkEdit && selected === 0) bulkEdit.hidden = true;
       if (selectAll) {
         selectAll.checked = boxes.length > 0 && selected === boxes.length;
         selectAll.indeterminate = selected > 0 && selected < boxes.length;
@@ -22,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
       syncSelection();
     });
     boxes.forEach(box => box.addEventListener('change', syncSelection));
+    bulkProductsForm.querySelector('[data-bulk-edit-toggle]')?.addEventListener('click', () => { bulkEdit.hidden = false; });
+    bulkProductsForm.querySelector('[data-bulk-edit-close]')?.addEventListener('click', () => { bulkEdit.hidden = true; });
+    bulkProductsForm.querySelector('[data-bulk-update]')?.addEventListener('click', event => {
+      const selected = boxes.filter(box => box.checked).length;
+      const changed = bulkProductsForm.querySelectorAll('[data-bulk-edit] input[name^="change["]:checked').length;
+      if (changed === 0 || !confirm(`Apply the chosen changes to ${selected} selected product${selected === 1 ? '' : 's'}?`)) event.preventDefault();
+    });
     bulkProductsForm.querySelectorAll('[data-bulk-confirm]').forEach(button => button.addEventListener('click', event => {
       const selected = boxes.filter(box => box.checked).length;
       if (selected === 0 || !confirm(button.dataset.bulkConfirm.replace('the selected products', `${selected} selected product${selected === 1 ? '' : 's'}`))) event.preventDefault();
