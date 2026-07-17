@@ -103,7 +103,9 @@ $page = max(1, (int)($_GET['page'] ?? 1));
 $perPage = 50;
 $offset = ($page - 1) * $perPage;
 $q = trim((string)($_GET['q'] ?? ''));
-$group = (int)($_GET['group'] ?? 0);
+$groupFilter = trim((string)($_GET['group'] ?? ''));
+$group = ctype_digit($groupFilter) && (int)$groupFilter > 0 ? (int)$groupFilter : null;
+$ungrouped = $groupFilter === 'ungrouped';
 $wholesale = in_array((string)($_GET['wholesale'] ?? ''), ['yes', 'no'], true) ? (string)$_GET['wholesale'] : '';
 $missingCost = (string)($_GET['missing_cost'] ?? '') === '1';
 $missingRetail = (string)($_GET['missing_retail'] ?? '') === '1';
@@ -145,7 +147,9 @@ if ($q !== '') {
     $where[] = '(p.product_name LIKE ? OR p.sku LIKE ? OR p.product_code LIKE ?)';
     $params = array_fill(0, 3, "%$q%");
 }
-if ($group) {
+if ($ungrouped) {
+    $where[] = 'p.group_id IS NULL';
+} elseif ($group !== null) {
     $where[] = 'p.group_id = ?';
     $params[] = $group;
 }
@@ -173,7 +177,7 @@ page_header('Products');
 </div>
 <form class="toolbar card" method="get">
     <input name="q" value="<?= e($q) ?>" placeholder="Search name, SKU or code">
-    <select name="group"><option value="">All groups</option><?php foreach ($groups as $g): ?><option value="<?= (int)$g['id'] ?>" <?= $group === (int)$g['id'] ? 'selected' : '' ?>><?= e($g['name']) ?></option><?php endforeach ?></select>
+    <select name="group"><option value="">All groups</option><option value="ungrouped" <?= $ungrouped ? 'selected' : '' ?>>Ungrouped products</option><?php foreach ($groups as $g): ?><option value="<?= (int)$g['id'] ?>" <?= $group === (int)$g['id'] ? 'selected' : '' ?>><?= e($g['name']) ?></option><?php endforeach ?></select>
     <select name="wholesale"><option value="">All product types</option><option value="yes" <?= $wholesale === 'yes' ? 'selected' : '' ?>>Wholesale products</option><option value="no" <?= $wholesale === 'no' ? 'selected' : '' ?>>Non-wholesale products</option></select>
     <label class="filter-check"><input type="checkbox" name="missing_cost" value="1" <?= $missingCost ? 'checked' : '' ?>> Missing cost</label>
     <label class="filter-check"><input type="checkbox" name="missing_retail" value="1" <?= $missingRetail ? 'checked' : '' ?>> Missing retail price</label>
