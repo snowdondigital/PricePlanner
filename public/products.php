@@ -186,7 +186,7 @@ page_header('Products');
     <?php if (can('edit') || can('delete')): ?>
         <div class="bulk-actions card" data-bulk-actions hidden>
             <span><strong data-selection-count>0</strong> selected</span>
-            <?php if (can('edit')): ?><button class="button primary" type="button" data-bulk-edit-toggle>Edit selected</button><?php endif ?>
+            <?php if (can('edit')): ?><a class="button primary" href="#bulk-edit" data-bulk-edit-toggle>Edit selected</a><?php endif ?>
             <?php if (can('delete')): ?>
                 <button class="button" name="bulk_action" value="archive" data-bulk-confirm="Archive the selected products?">Archive selected</button>
                 <button class="button danger" name="bulk_action" value="delete" data-bulk-confirm="Permanently delete the selected products? This cannot be undone.">Delete permanently</button>
@@ -194,10 +194,10 @@ page_header('Products');
         </div>
     <?php endif ?>
     <?php if (can('edit')): ?>
-        <section class="bulk-edit card" data-bulk-edit hidden>
-            <div class="card-head"><div><h2>Edit selected products</h2><small>Tick each field you want to replace. Unticked fields stay unchanged.</small></div><button class="button" type="button" data-bulk-edit-close>Close</button></div>
+        <section class="bulk-edit card" id="bulk-edit" data-bulk-edit hidden>
+            <div class="card-head"><div><h2>Edit selected products</h2><small>Tick each field you want to replace. Unticked fields stay unchanged.</small></div><a class="button" href="#products-table" data-bulk-edit-close>Close</a></div>
             <div class="bulk-edit-grid">
-                <label><span><input type="checkbox" name="change[group_id]" value="1"> Product group</span><select name="bulk[group_id]"><option value="">No group</option><?php foreach ($groups as $g): ?><option value="<?= (int)$g['id'] ?>"><?= e($g['name']) ?></option><?php endforeach ?></select></label>
+                <label><span><input type="checkbox" name="change[group_id]" value="1" data-bulk-field> Product group</span><select name="bulk[group_id]"><option value="">No group</option><?php foreach ($groups as $g): ?><option value="<?= (int)$g['id'] ?>"><?= e($g['name']) ?></option><?php endforeach ?></select></label>
                 <?php foreach ([
                     'unit_cost' => ['Unit cost', '.00001'], 'labour_cost' => ['Labour cost', '.00001'],
                     'retail_price' => ['Retail price excl. VAT', '.0001'], 'trade_price' => ['Trade price', '.0001'],
@@ -205,14 +205,14 @@ page_header('Products');
                     'competitor_price' => ['Competitor price', '.0001'], 'target_margin' => ['Target margin %', '.01'],
                     'trade_discount' => ['Trade discount %', '.01'], 'minimum_margin' => ['Minimum margin %', '.01'],
                 ] as $field => [$label, $step]): ?>
-                    <label><span><input type="checkbox" name="change[<?= e($field) ?>]" value="1"> <?= e($label) ?></span><input type="number" min="0" <?= in_array($field, ['target_margin','trade_discount','minimum_margin'], true) ? 'max="99.99"' : '' ?> step="<?= e($step) ?>" name="bulk[<?= e($field) ?>]" placeholder="<?= $field === 'labour_cost' || in_array($field, ['target_margin','trade_discount','minimum_margin'], true) ? 'Enter value' : 'Blank clears value' ?>"></label>
+                    <label><span><input type="checkbox" name="change[<?= e($field) ?>]" value="1" data-bulk-field> <?= e($label) ?></span><input type="number" min="0" <?= in_array($field, ['target_margin','trade_discount','minimum_margin'], true) ? 'max="99.99"' : '' ?> step="<?= e($step) ?>" name="bulk[<?= e($field) ?>]" placeholder="<?= $field === 'labour_cost' || in_array($field, ['target_margin','trade_discount','minimum_margin'], true) ? 'Enter value' : 'Blank clears value' ?>"></label>
                 <?php endforeach ?>
-                <label><span><input type="checkbox" name="change[is_wholesale]" value="1"> Wholesale status</span><select name="bulk[is_wholesale]"><option value="1">Wholesale</option><option value="0">Not wholesale</option></select></label>
+                <label><span><input type="checkbox" name="change[is_wholesale]" value="1" data-bulk-field> Wholesale status</span><select name="bulk[is_wholesale]"><option value="1">Wholesale</option><option value="0">Not wholesale</option></select></label>
             </div>
             <button class="button primary" name="bulk_action" value="update" data-bulk-update>Apply changes</button>
         </section>
     <?php endif ?>
-    <div class="card table-wrap spreadsheet"><table><thead><tr>
+    <div class="card table-wrap spreadsheet" id="products-table"><table><thead><tr>
         <?php if (can('edit') || can('delete')): ?><th class="select-column"><input type="checkbox" data-select-all aria-label="Select all products on this page"></th><?php endif ?>
         <th><?= $sortLabel('group', 'Group') ?></th><th><?= $sortLabel('sku', 'SKU') ?></th><th><?= $sortLabel('name', 'Product') ?></th><th><?= $sortLabel('code', 'Code') ?></th>
         <th><?= $sortLabel('cost', 'Cost') ?></th><th><?= $sortLabel('target', 'Target') ?></th><th><?= $sortLabel('preferred', 'Preferred') ?></th><th><?= $sortLabel('retail', 'Retail ex VAT') ?></th>

@@ -26,11 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
       syncSelection();
     });
     boxes.forEach(box => box.addEventListener('change', syncSelection));
-    bulkProductsForm.querySelector('[data-bulk-edit-toggle]')?.addEventListener('click', () => { bulkEdit.hidden = false; });
-    bulkProductsForm.querySelector('[data-bulk-edit-close]')?.addEventListener('click', () => { bulkEdit.hidden = true; });
+    bulkProductsForm.querySelector('[data-bulk-edit-toggle]')?.addEventListener('click', () => {
+      if (bulkEdit) bulkEdit.hidden = false;
+    });
+    bulkProductsForm.querySelector('[data-bulk-edit-close]')?.addEventListener('click', () => {
+      if (bulkEdit) bulkEdit.hidden = true;
+    });
     bulkProductsForm.querySelector('[data-bulk-update]')?.addEventListener('click', event => {
       const selected = boxes.filter(box => box.checked).length;
-      const changed = bulkProductsForm.querySelectorAll('[data-bulk-edit] input[name^="change["]:checked').length;
+      const changed = bulkProductsForm.querySelectorAll('[data-bulk-field]:checked').length;
       if (changed === 0 || !confirm(`Apply the chosen changes to ${selected} selected product${selected === 1 ? '' : 's'}?`)) event.preventDefault();
     });
     bulkProductsForm.querySelectorAll('[data-bulk-confirm]').forEach(button => button.addEventListener('click', event => {

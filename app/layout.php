@@ -8,8 +8,8 @@ function page_header(string $title): void
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?= e($title) ?> &middot; <?= e(config('site_name')) ?></title>
-<link rel="stylesheet" href="<?= e(url('../assets/css/app.css')) ?>">
-<script defer src="<?= e(url('../assets/js/app.js')) ?>"></script>
+<link rel="stylesheet" href="<?= e(url('../assets/css/app.css?v=' . rawurlencode(app_version()))) ?>">
+<script defer src="<?= e(url('../assets/js/app.js?v=' . rawurlencode(app_version()))) ?>"></script>
 </head><body>
 <?php if ($u): ?><header class="topbar">
   <a class="brand" href="<?= e(url('dashboard.php')) ?>"><?= e(config('site_name')) ?></a>

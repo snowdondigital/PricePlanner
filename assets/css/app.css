@@ -133,6 +133,7 @@ tbody tr:hover { background: #f7faf8; }
 .bulk-actions[hidden] { display: none; }
 .bulk-actions span { margin-right: auto; color: var(--muted); }
 .bulk-edit[hidden] { display: none; }
+.bulk-edit:target { display: block; }
 .bulk-edit .card-head { align-items: flex-start; margin-bottom: 16px; }
 .bulk-edit-grid { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 0 14px; }
 .bulk-edit-grid label > span { display: flex; align-items: center; gap: 7px; }
