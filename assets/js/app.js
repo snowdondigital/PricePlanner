@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const form = document.querySelector('#product-form');
   if (form) {
+    const suggestedPriceInputs = [...form.querySelectorAll('[data-suggested-price]')];
+    const automaticPrices = new Map(suggestedPriceInputs.map(input => [input.name, input.value === '']));
     const num = name => {
       const value = form.elements[name]?.value;
       return value === '' || value == null || Number.isNaN(Number(value)) ? null : Number(value);
@@ -58,21 +60,42 @@ document.addEventListener('DOMContentLoaded', () => {
       const el = form.querySelector(`[data-result="${key}"]`);
       if (el) el.textContent = formatter(value);
     };
+    const fillSuggestedPrice = (name, value) => {
+      const input = form.elements[name];
+      if (!input || !automaticPrices.get(name)) return;
+      input.value = value == null || !Number.isFinite(value) ? '' : Number(value.toFixed(4)).toString();
+    };
+    const showPriceStatus = name => {
+      const status = form.querySelector(`[data-price-status="${name}"]`);
+      if (status) status.textContent = automaticPrices.get(name) ? 'Using suggested price' : 'Custom price override';
+    };
     const calculate = () => {
       form.querySelectorAll('.percent-input').forEach(input => {
         form.elements[input.dataset.target].value = input.value === '' ? '' : Number(input.value) / 100;
       });
-      const unit = num('unit_cost'), labour = num('labour_cost'), target = num('target_margin'), retail = num('retail_price'), discount = num('trade_discount'), trade = num('trade_price'), minimum = num('minimum_margin');
+      const unit = num('unit_cost'), labour = num('labour_cost'), target = num('target_margin'), discount = num('trade_discount'), minimum = num('minimum_margin');
       const cost = unit == null || labour == null ? null : unit + labour;
+      const preferred = cost == null || target == null || target >= 1 ? null : cost / (1 - target);
       show('total_cost', cost);
-      show('preferred_sell_price', cost == null || target == null || target >= 1 ? null : cost / (1 - target));
+      show('preferred_sell_price', preferred);
+      fillSuggestedPrice('retail_price', preferred);
+      const retail = num('retail_price');
+      const suggestedTrade = retail == null || discount == null ? null : retail * (1 - discount);
+      fillSuggestedPrice('trade_price', suggestedTrade);
+      const trade = num('trade_price');
+      show('retail_price', retail);
       show('retail_price_inc_vat', retail == null ? null : retail * (1 + Number(form.dataset.vat)));
-      show('suggested_trade_price', retail == null || discount == null ? null : retail * (1 - discount));
+      show('suggested_trade_price', suggestedTrade);
+      show('trade_price', trade);
       show('actual_trade_discount', retail == null || trade == null || retail === 0 ? null : 1 - trade / retail, percentFormat);
       show('retail_margin', retail == null || cost == null || retail === 0 ? null : (retail - cost) / retail, percentFormat);
       show('trade_margin', trade == null || cost == null || trade === 0 ? null : (trade - cost) / trade, percentFormat);
       show('minimum_price', cost == null || minimum == null || minimum >= 1 ? null : cost / (1 - minimum));
+      suggestedPriceInputs.forEach(input => showPriceStatus(input.name));
     };
+    suggestedPriceInputs.forEach(input => input.addEventListener('input', () => {
+      automaticPrices.set(input.name, input.value === '');
+    }));
     form.elements.target_margin_pct?.addEventListener('input', () => {
       if (form.elements.target_margin_changed) form.elements.target_margin_changed.value = '1';
     });
