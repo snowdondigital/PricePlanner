@@ -1,4 +1,4 @@
 {
-  "version": "1.2.3",
-  "migrations": []
+  "version": "1.2.4",
+  "migrations": ["sql/upgrade_2026_08_12_price_list_discount_basis.sql"]
 }

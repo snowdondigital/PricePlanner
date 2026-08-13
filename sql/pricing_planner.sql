@@ -65,6 +65,7 @@ CREATE TABLE price_lists (
  status ENUM('draft','internal','live') NOT NULL DEFAULT 'draft',
  custom_pricing_enabled TINYINT(1) NOT NULL DEFAULT 0,
  global_discount DECIMAL(8,6) NULL,
+ discount_basis ENUM('retail','trade') NOT NULL DEFAULT 'retail',
  columns_json JSON NULL,
  created_by INT UNSIGNED NULL,
  updated_by INT UNSIGNED NULL,

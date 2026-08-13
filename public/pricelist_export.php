@@ -7,7 +7,7 @@ $list = fetch_price_list($id);
 if (!$list) { http_response_code(404); exit('Price list not found.'); }
 $items = fetch_price_list_items($id);
 $columns = selected_price_list_columns($list['columns_json'] ?? null);
-$labels = price_list_columns();
+$labels = price_list_column_labels($list['columns_json'] ?? null);
 
 if ($format === 'pdf') {
     $lines = [$list['title'], 'Status: ' . ucfirst($list['status']) . ' | Valid: ' . ($list['valid_from'] ?: 'Open') . ' to ' . ($list['valid_to'] ?: 'Open'), ''];

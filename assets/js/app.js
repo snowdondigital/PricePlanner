@@ -121,18 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const value = Number(priceListForm.elements.global_discount_pct?.value || 0);
     return Number.isFinite(value) ? Math.max(0, Math.min(99.99, value)) / 100 : 0;
   };
+  const discountBasis = () => priceListForm.elements.discount_basis?.value === 'trade' ? 'trade' : 'retail';
   const syncPriceList = () => {
     const enabled = customToggle?.checked;
     if (customPanel) customPanel.hidden = !enabled;
     if (priceListForm.elements.global_discount) priceListForm.elements.global_discount.value = enabled ? globalDiscount() : '';
     selectedRows().forEach(row => {
       const retail = row.dataset.retail === '' ? null : Number(row.dataset.retail);
+      const trade = row.dataset.trade === '' ? null : Number(row.dataset.trade);
       const cost = row.dataset.cost === '' ? null : Number(row.dataset.cost);
       const overrideInput = row.querySelector('.line-discount');
       if (overrideInput) overrideInput.disabled = !enabled;
       const override = overrideInput?.value === '' ? null : Number(overrideInput.value) / 100;
       const discount = enabled ? (override ?? globalDiscount()) : 0;
-      const finalPrice = retail == null || !Number.isFinite(retail) ? null : retail * (1 - discount);
+      const basePrice = discountBasis() === 'trade' ? trade : retail;
+      const finalPrice = basePrice == null || !Number.isFinite(basePrice) ? null : basePrice * (1 - discount);
       const margin = finalPrice == null || cost == null || finalPrice === 0 ? null : (finalPrice - cost) / finalPrice;
       row.querySelector('[data-final-price]').textContent = moneyFormat(finalPrice);
       row.querySelector('[data-final-margin]').textContent = percentFormat(margin);

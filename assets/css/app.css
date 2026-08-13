@@ -198,6 +198,9 @@ tbody tr:hover { background: #f7faf8; }
   grid-template-columns: repeat(4, minmax(150px, 1fr));
   gap: 0 14px;
 }
+.column-option { padding: 8px 0; }
+.column-option .check { margin-bottom: 5px; }
+.column-option input[type="text"], .column-option input:not([type]) { width: 100%; }
 .product-picker { max-height: 70vh; }
 .product-picker .card-head {
   align-items: center;
